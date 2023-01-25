@@ -1,6 +1,10 @@
+import express from 'express'
 import { Request, RequestHandler } from "express";
 import db from "../db";
 import { comparePassword, createJWT, hashPassword } from "../modules/auth";
+
+
+
 
 interface TypedRequestParam extends Request {
     body: {
@@ -57,3 +61,4 @@ export const signIn: RequestHandler = async (req: TypedRequestParam, res) => {
       return res.status(400).json({ error: e?.toString() })
     }
 }
+

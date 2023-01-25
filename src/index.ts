@@ -1,10 +1,11 @@
 import express from 'express'
 import * as dotenv from 'dotenv'
 import db from './db'
-import userRoutes from './routes/api'
+import userRoutes from './routes/user'
 import { protect } from './modules/auth'
 import { createNewUser, signIn } from './handlers/user'
-import Api from './routes/api'
+import postRoutes from './routes/post'
+import commentRoutes from './routes/comment'
 
 dotenv.config()
 
@@ -17,10 +18,8 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'hello' })
 })
 
-app.use('/api', protect, [userRoutes, Api])
+app.use('/api', protect, [userRoutes,postRoutes,commentRoutes])
 
-app.post('/signUp', createNewUser)
-app.post('/signIn', signIn)
 
 
 app.listen(PORT, () => {
