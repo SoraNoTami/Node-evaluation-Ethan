@@ -5,30 +5,26 @@ import db from "../db";
 const app = Router()
 
 
-app.get('/posts', async (req, res) => {
-  const posts = await db.post.findMany({
+app.get('/comments', async (req, res) => {
+  const comments = await db.comment.findMany({
     where: {
       userId: req.user.id
     }
   })
-  return res.status(200).json(posts)
+  return res.status(200).json(comments)
 })
 
 app.get(
-  '/post/:uuid',
+  '/comment/:uuid',
   async (req, res) => {
     try {
-      const post = await db.post.findFirstOrThrow({
+      const comment = await db.comment.findFirstOrThrow({
         where: {
           id: req.params.uuid,
           userId: req.user.id
-        },
-        include: {
-          comments: true
         }
       })
-
-      return res.status(200).json(post)
+      return res.status(200).json(comment)
     } catch(e) {
       return res.status(400).json({ message: 'Not found' })
     }
@@ -37,55 +33,54 @@ app.get(
 
 
 app.post(
-  '/post',
-  body('title').exists().isString().notEmpty(),
+  '/post/:uuid/comment/create',
   async (req: Request, res: Response) => {
     try {
       validationResult(req).throw()
-      const createdPost = await db.post.create({
+      const createdcomment = await db.comment.create({
         data: {
-          title: req.body.title,
           content: req.body.content,
+          postId: req.params.uuid,
           userId: req.user.id
         }
       })
 
-      return res.status(200).json(createdPost)
+      return res.status(200).json(createdcomment)
     } catch(e) {
       console.log(e)
-      return res.status(400).json({error: e || 'Cannot create Post'})
+      return res.status(400).json({error: e || 'Cannot create comment'})
     }
 })
 
-app.put('/post/:uuid', body('title').exists().isString().notEmpty(), async (req, res) => {
+app.put('/comment/:uuid', async (req, res) => {
   try {
     validationResult(req).throw()
-    const updatedPost = await db.post.update({
+    const updatedcomment = await db.comment.update({
       where: {
         id: req.params?.uuid,
       },
       data: {
-        title: req.body.title
+        content: req.body.content
       }
     })
   
-    return res.status(200).json(updatedPost)
+    return res.status(200).json(updatedcomment)
   } catch(e) {
     return res.status(400).json({message: e || 'Error while updating'})
   }
 })
 
-app.delete('/post/:uuid', async (req, res) => {
-  const post = await db.post.findFirst({
+app.delete('/comment/:uuid', async (req, res) => {
+  const comment = await db.comment.findFirst({
     where: {
       id: req.params.uuid,
     }
   })
-  if(!(post?.userId == req.user.id)){
-    return res.status(400).json({error: 'This not your Post, you can only delete one of your Post '})
+  if(!(comment?.userId == req.user.id)){
+    return res.status(400).json({error: 'This not your comment, you can only delete one of your comment '})
   }else {
     try {
-      await db.post.delete({
+      await db.comment.delete({
         where: {
           id: req.params.uuid
         }
