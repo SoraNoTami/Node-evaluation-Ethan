@@ -1,9 +1,7 @@
 import express from 'express'
 import * as dotenv from 'dotenv'
-import db from './db'
-import userRoutes from './routes/user'
+import userRoutes  from './routes/user'
 import { protect } from './modules/auth'
-import { createNewUser, signIn } from './handlers/user'
 import postRoutes from './routes/post'
 import commentRoutes from './routes/comment'
 
@@ -19,7 +17,6 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api', protect, [userRoutes,postRoutes,commentRoutes])
-
 
 
 app.listen(PORT, () => {

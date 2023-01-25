@@ -2,6 +2,7 @@ import { Request, RequestHandler, Response, Router } from "express";
 import { body, check, validationResult } from "express-validator";
 import db from "../db";
 
+
 const app = Router()
 
 
@@ -34,7 +35,6 @@ app.get(
     }
   }
 )
-
 
 app.post(
   '/post',
