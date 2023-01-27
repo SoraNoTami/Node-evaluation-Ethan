@@ -5,7 +5,7 @@ import db from '../db'
 
 const app = Router()
 
-app.post('/', async (req: Request, res: Response) => {
+app.post('/signIn', async (req: Request, res: Response) => {
   try {
     if (!(req.body?.username && req.body?.password)) {
       throw new Error('Invalid body provided')
