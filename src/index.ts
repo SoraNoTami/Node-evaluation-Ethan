@@ -12,11 +12,8 @@ const PORT = 1234
 
 app.use(express.json())
 
-app.get('/', (req, res) => {
-  res.status(200).json({ message: 'hello' })
-})
-
-app.use('/api', protect, [userRoutes,postRoutes,commentRoutes])
+app.use('/', userRoutes)
+app.use('/api', protect, [postRoutes,commentRoutes])
 
 
 app.listen(PORT, () => {
